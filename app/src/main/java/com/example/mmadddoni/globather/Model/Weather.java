@@ -1,13 +1,19 @@
-package com.example.mmadddoni.globather.Entity;
+package com.example.mmadddoni.globather.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
+
+import io.realm.RealmObject;
+import io.realm.WeatherRealmProxy;
 
 /**
  * Created by mmadddoni on 11/07/16.
  */
-public class Weather implements Serializable{
+@Parcel(implementations = { WeatherRealmProxy.class },
+        value = Parcel.Serialization.BEAN,
+        analyze = { Weather.class })
+public class Weather extends RealmObject {
     @SerializedName("id")
     private int id;
 
@@ -19,16 +25,6 @@ public class Weather implements Serializable{
 
     @SerializedName("icon")
     private String icon;
-
-    public Weather() {
-    }
-
-    public Weather(int id, String status, String description, String icon) {
-        this.id = id;
-        this.status = status;
-        this.description = description;
-        this.icon = icon;
-    }
 
     public int getId() {
         return id;

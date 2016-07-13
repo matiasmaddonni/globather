@@ -1,26 +1,21 @@
-package com.example.mmadddoni.globather.Entity;
+package com.example.mmadddoni.globather.Model;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
 /**
  * Created by mmadddoni on 11/07/16.
  */
-public class Response {
+public class Response extends RealmObject {
     @SerializedName("city")
     private City city;
 
     @SerializedName("list")
-    private List<Forecast> list;
-
-    public Response() {
-    }
-
-    public Response(City city, List<Forecast> list) {
-        this.city = city;
-        this.list = list;
-    }
+    private RealmList<Forecast> list;
 
     public City getCity() {
         return city;
@@ -34,7 +29,7 @@ public class Response {
         return list;
     }
 
-    public void setList(List<Forecast> list) {
+    public void setList(RealmList<Forecast> list) {
         this.list = list;
     }
 }

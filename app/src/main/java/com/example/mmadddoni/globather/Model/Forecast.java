@@ -1,14 +1,22 @@
-package com.example.mmadddoni.globather.Entity;
+package com.example.mmadddoni.globather.Model;
 
+import com.example.mmadddoni.globather.Converter.WeatherListParcelConverter;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-import java.util.List;
+import org.parceler.Parcel;
+import org.parceler.ParcelPropertyConverter;
+
+import io.realm.ForecastRealmProxy;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 
 /**
  * Created by mmadddoni on 11/07/16.
  */
-public class Forecast implements Serializable {
+@Parcel(implementations = { ForecastRealmProxy.class },
+        value = Parcel.Serialization.BEAN,
+        analyze = { Forecast.class })
+public class Forecast extends RealmObject {
     @SerializedName("dt")
     private long time;
 
@@ -22,18 +30,7 @@ public class Forecast implements Serializable {
     private int humidity;
 
     @SerializedName("weather")
-    private List<Weather> weather;
-
-    public Forecast() {
-    }
-
-    public Forecast(long time, Temperature temp, float pressure, int humidity, List<Weather> weather) {
-        this.time = time;
-        this.temp = temp;
-        this.pressure = pressure;
-        this.humidity = humidity;
-        this.weather = weather;
-    }
+    private RealmList<Weather> weather;
 
     public long getTime() {
         return time;
@@ -67,11 +64,12 @@ public class Forecast implements Serializable {
         this.humidity = humidity;
     }
 
-    public List<Weather> getWeather() {
+    public RealmList<Weather> getWeather() {
         return weather;
     }
 
-    public void setWeather(List<Weather> weather) {
+    @ParcelPropertyConverter(WeatherListParcelConverter.class)
+    public void setWeather(RealmList<Weather> weather) {
         this.weather = weather;
     }
 }

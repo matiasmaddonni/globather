@@ -1,14 +1,22 @@
-package com.example.mmadddoni.globather.Entity;
+package com.example.mmadddoni.globather.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
+
+import io.realm.CityRealmProxy;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by mmadddoni on 11/07/16.
  */
-public class City implements Serializable{
+@Parcel(implementations = { CityRealmProxy.class },
+        value = Parcel.Serialization.BEAN,
+        analyze = { City.class })
+public class City extends RealmObject {
     @SerializedName("id")
+    @PrimaryKey
     private int id;
 
     @SerializedName("name")
@@ -19,16 +27,6 @@ public class City implements Serializable{
 
     @SerializedName("country")
     private String country;
-
-    public City() {
-    }
-
-    public City(int id, String name, Coordinates coord, String country) {
-        this.id = id;
-        this.name = name;
-        this.coord = coord;
-        this.country = country;
-    }
 
     public int getId() {
         return id;

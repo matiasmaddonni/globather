@@ -1,26 +1,24 @@
-package com.example.mmadddoni.globather.Entity;
+package com.example.mmadddoni.globather.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
+
+import io.realm.CoordinatesRealmProxy;
+import io.realm.RealmObject;
 
 /**
  * Created by mmadddoni on 11/07/16.
  */
-public class Coordinates implements Serializable{
+@Parcel(implementations = { CoordinatesRealmProxy.class },
+        value = Parcel.Serialization.BEAN,
+        analyze = { Coordinates.class })
+public class Coordinates extends RealmObject {
     @SerializedName("lon")
     private float lon;
 
     @SerializedName("lat")
     private float lat;
-
-    public Coordinates() {
-    }
-
-    public Coordinates(float lon, float lat) {
-        this.lon = lon;
-        this.lat = lat;
-    }
 
     public float getLon() {
         return lon;

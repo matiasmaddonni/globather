@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">Globather</string>
-    <string name="description">Descripción</string>
+    <string name="activity_main">Weather</string>
+    <string name="activity_description">Description</string>
+
+    <string name="description_country">Country:</string>
+    <string name="description_coordinates">Coordinates:</string>
+    <string name="description_reading">Reading:</string>
+    <string name="description_temperatures">Temperatures:</string>
+    <string name="description_pressure">Pressure:</string>
+    <string name="description_humidity">Humidity:</string>
+
+    <string name="description_temp_actual">Actual:</string>
+    <string name="description_temp_min">Minimum:</string>
+    <string name="description_temp_max">Maximum:</string>
+    <string name="description_temp_night">Night:</string>
+    <string name="description_temp_eve">Evening:</string>
+    <string name="description_temp_morn">Morning:</string>
+
+    <string name="welcome_pick">Pick a place</string>
+    <string name="welcome_button">Search</string>
+
 </resources>

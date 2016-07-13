@@ -10,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mmadddoni.globather.Activity.DescriptionActivity;
-import com.example.mmadddoni.globather.Entity.City;
-import com.example.mmadddoni.globather.Entity.Forecast;
+import com.example.mmadddoni.globather.Model.City;
+import com.example.mmadddoni.globather.Model.Forecast;
 import com.example.mmadddoni.globather.R;
 import com.squareup.picasso.Picasso;
+
+import org.parceler.Parcels;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -60,8 +62,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.MyView
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, DescriptionActivity.class);
-                intent.putExtra("CITY", city);
-                intent.putExtra("FORECAST", forecast);
+                intent.putExtra("CITY", Parcels.wrap(City.class, city));
+                intent.putExtra("FORECAST",  Parcels.wrap(Forecast.class, forecast));
                 context.startActivity(intent);
             }
         });

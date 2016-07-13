@@ -31,7 +31,7 @@
         android:layout_marginLeft="100dp"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:textColor="#FFFFF3"
+        android:textColor="#FFFFFF"
         android:textSize="30sp" />
 
     <Button

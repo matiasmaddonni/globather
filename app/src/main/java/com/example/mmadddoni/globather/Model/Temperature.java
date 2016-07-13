@@ -1,13 +1,19 @@
-package com.example.mmadddoni.globather.Entity;
+package com.example.mmadddoni.globather.Model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+import org.parceler.Parcel;
+
+import io.realm.RealmObject;
+import io.realm.TemperatureRealmProxy;
 
 /**
  * Created by mmadddoni on 11/07/16.
  */
-public class Temperature implements Serializable{
+@Parcel(implementations = { TemperatureRealmProxy.class },
+        value = Parcel.Serialization.BEAN,
+        analyze = { Temperature.class })
+public class Temperature extends RealmObject {
     @SerializedName("day")
     private float valueDay;
 
@@ -25,18 +31,6 @@ public class Temperature implements Serializable{
 
     @SerializedName("morn")
     private float valueMorn;
-
-    public Temperature() {
-    }
-
-    public Temperature(float valueDay, float valueMin, float valueMax, float valueNight, float valueEve, float valueMorn) {
-        this.valueDay = valueDay;
-        this.valueMin = valueMin;
-        this.valueMax = valueMax;
-        this.valueNight = valueNight;
-        this.valueEve = valueEve;
-        this.valueMorn = valueMorn;
-    }
 
     public float getValueDay() {
         return valueDay;

@@ -6,10 +6,12 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.mmadddoni.globather.Entity.City;
-import com.example.mmadddoni.globather.Entity.Forecast;
+import com.example.mmadddoni.globather.Model.City;
+import com.example.mmadddoni.globather.Model.Forecast;
 import com.example.mmadddoni.globather.R;
 import com.squareup.picasso.Picasso;
+
+import org.parceler.Parcels;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -40,11 +42,11 @@ public class DescriptionActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         if (savedInstanceState == null) {
-            city = (City) getIntent().getSerializableExtra(INTENT_CITY);
-            forecast = (Forecast) getIntent().getSerializableExtra(INTENT_FORECAST);
+            city = Parcels.unwrap(getIntent().getParcelableExtra(INTENT_CITY));
+            forecast = Parcels.unwrap(getIntent().getParcelableExtra(INTENT_FORECAST));
         } else {
-            city = (City) savedInstanceState.getSerializable(SAVED_CITY);
-            forecast = (Forecast) savedInstanceState.getSerializable(SAVED_FORECAST);
+            city = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_CITY));
+            forecast = Parcels.unwrap(savedInstanceState.getParcelable(SAVED_FORECAST));
         }
 
         loadUI();
@@ -52,8 +54,8 @@ public class DescriptionActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(SAVED_CITY, city);
-        outState.putSerializable(SAVED_FORECAST, forecast);
+        outState.putParcelable(SAVED_CITY, Parcels.wrap(City.class, city));
+        outState.putParcelable(SAVED_FORECAST, Parcels.wrap(Forecast.class, forecast));
         super.onSaveInstanceState(outState);
     }
 
@@ -66,12 +68,12 @@ public class DescriptionActivity extends AppCompatActivity {
         ((TextView)findViewById(R.id.city_lat)).setText(String.valueOf(city.getCoord().getLat()));
         ((TextView)findViewById(R.id.city_lon)).setText(String.valueOf(city.getCoord().getLon()));
         ((TextView)findViewById(R.id.city_date)).setText(new SimpleDateFormat("dd MMM yyyy HH:MM").format(forecast.getTime()*1000));
-        ((TextView)findViewById(R.id.temp_day)).setText("Actual: " + new DecimalFormat("##.#").format(forecast.getTemp().getValueDay() - 273.16) + "°C");
-        ((TextView)findViewById(R.id.temp_min)).setText("Mínima: " + new DecimalFormat("##.#").format(forecast.getTemp().getValueMin() - 273.16) + "°C");
-        ((TextView)findViewById(R.id.temp_max)).setText("Máxima: " + new DecimalFormat("##.#").format(forecast.getTemp().getValueMax() - 273.16) + "°C");
-        ((TextView)findViewById(R.id.temp_night)).setText("Noche: " + new DecimalFormat("##.#").format(forecast.getTemp().getValueNight() - 273.16) + "°C");
-        ((TextView)findViewById(R.id.temp_eve)).setText("Atardecer: " + new DecimalFormat("##.#").format(forecast.getTemp().getValueEve() - 273.16) + "°C");
-        ((TextView)findViewById(R.id.temp_morn)).setText("Mañana: " + new DecimalFormat("##.#").format(forecast.getTemp().getValueMorn() - 273.16) + "°C");
+        ((TextView)findViewById(R.id.temp_day)).setText(getResources().getString(R.string.description_temp_actual) + new DecimalFormat("##.#").format(forecast.getTemp().getValueDay() - 273.16) + "°C");
+        ((TextView)findViewById(R.id.temp_min)).setText(getResources().getString(R.string.description_temp_min) + new DecimalFormat("##.#").format(forecast.getTemp().getValueMin() - 273.16) + "°C");
+        ((TextView)findViewById(R.id.temp_max)).setText(getResources().getString(R.string.description_temp_max) + new DecimalFormat("##.#").format(forecast.getTemp().getValueMax() - 273.16) + "°C");
+        ((TextView)findViewById(R.id.temp_night)).setText(getResources().getString(R.string.description_temp_night) + new DecimalFormat("##.#").format(forecast.getTemp().getValueNight() - 273.16) + "°C");
+        ((TextView)findViewById(R.id.temp_eve)).setText(getResources().getString(R.string.description_temp_eve) + new DecimalFormat("##.#").format(forecast.getTemp().getValueEve() - 273.16) + "°C");
+        ((TextView)findViewById(R.id.temp_morn)).setText(getResources().getString(R.string.description_temp_morn) + new DecimalFormat("##.#").format(forecast.getTemp().getValueMorn() - 273.16) + "°C");
         ((TextView)findViewById(R.id.temp_press)).setText(String.valueOf(forecast.getPressure()) + " hPa");
         ((TextView)findViewById(R.id.temp_hum)).setText(String.valueOf(forecast.getHumidity()) + "%");
     }

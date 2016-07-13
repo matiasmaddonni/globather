@@ -32,7 +32,6 @@
                 android:id="@+id/city_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Shuzenji"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
@@ -42,8 +41,7 @@
                 android:layout_height="70dp"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:src="@drawable/placeholder" />
+                android:layout_marginTop="10dp" />
 
             <TextView
                 android:id="@+id/country"
@@ -51,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/city_name"
                 android:layout_marginTop="10dp"
-                android:text="País:"
+                android:text="@string/description_country"
                 android:textSize="20sp"
                 android:textStyle="italic" />
 
@@ -63,7 +61,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/country"
-                android:text="JP"
                 android:textSize="20sp" />
 
             <TextView
@@ -72,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/country"
                 android:layout_marginTop="10dp"
-                android:text="Coordenadas:"
+                android:text="@string/description_coordinates"
                 android:textSize="20sp"
                 android:textStyle="italic" />
 
@@ -84,7 +81,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/coord"
-                android:text="138.933334"
                 android:textSize="20sp" />
 
             <TextView
@@ -94,7 +90,6 @@
                 android:layout_below="@id/city_lat"
                 android:layout_marginLeft="10dp"
                 android:layout_toRightOf="@id/coord"
-                android:text="34.966671"
                 android:textSize="20sp" />
 
             <TextView
@@ -103,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/city_lon"
                 android:layout_marginTop="10dp"
-                android:text="Lectura:"
+                android:text="@string/description_reading"
                 android:textSize="20sp"
                 android:textStyle="italic" />
 
@@ -115,7 +110,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/reading"
-                android:text="11 de sep 2010 22:10"
                 android:textSize="20sp" />
 
             <TextView
@@ -124,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/reading"
                 android:layout_marginTop="10dp"
-                android:text="Temperaturas:"
+                android:text="@string/description_temperatures"
                 android:textSize="20sp"
                 android:textStyle="italic" />
 
@@ -136,7 +130,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/reading"
-                android:text="Actual: 30 °C"
                 android:textSize="20sp" />
 
             <TextView
@@ -147,7 +140,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/reading"
-                android:text="Minima: 30 °C"
                 android:textSize="20sp" />
 
             <TextView
@@ -158,7 +150,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/reading"
-                android:text="Maxima: 30 °C"
                 android:textSize="20sp" />
 
             <TextView
@@ -169,7 +160,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/reading"
-                android:text="Noche: 30 °C"
                 android:textSize="20sp" />
 
             <TextView
@@ -180,7 +170,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/reading"
-                android:text="Atardecer: 30 °C"
                 android:textSize="20sp" />
 
             <TextView
@@ -191,7 +180,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/reading"
-                android:text="Mañana: 30 °C"
                 android:textSize="20sp" />
 
             <TextView
@@ -200,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/temp_morn"
                 android:layout_marginTop="10dp"
-                android:text="Presión:"
+                android:text="@string/description_pressure"
                 android:textSize="20sp"
                 android:textStyle="italic" />
 
@@ -212,7 +200,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/pressure"
-                android:text="123123"
                 android:textSize="20sp" />
 
             <TextView
@@ -221,7 +208,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/pressure"
                 android:layout_marginTop="10dp"
-                android:text="Humedad:"
+                android:text="@string/description_humidity"
                 android:textSize="20sp"
                 android:textStyle="italic" />
 
@@ -233,7 +220,6 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/humidity"
-                android:text="123123"
                 android:textSize="20sp" />
 
         </RelativeLayout>

@@ -16,6 +16,7 @@ import com.example.mmadddoni.globather.Model.Response;
 import com.example.mmadddoni.globather.R;
 import com.example.mmadddoni.globather.Service.OpenWeatherService;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
 
     private Toolbar mToolbar;
+    private SweetAlertDialog progressDialog;
 
     private String city;
     private RecyclerView recyclerView;
@@ -80,7 +82,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadForecastData() {
         long count = realm.where(Response.class).count();
         if (count != 0) {
-            Response response = realm.where(Response.class).equalTo("city.name", city).findFirst();
+            String realmCity = city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase();
+            Response response = realm.where(Response.class).equalTo("city.name", realmCity).findFirst();
             if (response != null) {
                 loadResponseFromRealm(response);
             } else {
@@ -119,7 +122,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Response> call, Throwable t) {
-                //TODO: show dialog
+                new SweetAlertDialog(MainActivity.this, SweetAlertDialog.ERROR_TYPE)
+                        .setTitleText("Oops...")
+                        .setContentText("Something went wrong!")
+                        .show();
                 Log.i("Info", "Failure calling rest service");
             }
         });

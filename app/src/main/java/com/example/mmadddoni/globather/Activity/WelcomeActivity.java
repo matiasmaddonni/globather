@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.mmadddoni.globather.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -27,7 +26,6 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
  * Created by mmadddoni on 12/07/16.
  */
 public class WelcomeActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
-    private static final String WELCOME_CITY = "WELCOME_CITY";
     private static final int PERMISSION_ACCESS_COARSE_LOCATION = 1;
 
     private GoogleApiClient googleApiClient;
@@ -37,10 +35,6 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
 
-        if (ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(WelcomeActivity.this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, PERMISSION_ACCESS_COARSE_LOCATION);
-        }
-
         googleApiClient = new GoogleApiClient.Builder(this, this, this)
                 .addApi(LocationServices.API)
                 .build();
@@ -48,9 +42,7 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
         setUpUI();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    private void startClient() {
         if (googleApiClient != null) {
             googleApiClient.connect();
         }
@@ -58,7 +50,9 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
 
     @Override
     protected void onStop() {
-        googleApiClient.disconnect();
+        if (googleApiClient != null && googleApiClient.isConnected()) {
+            googleApiClient.disconnect();
+        }
         super.onStop();
     }
 
@@ -67,7 +61,11 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
         location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (ContextCompat.checkSelfPermission(WelcomeActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(WelcomeActivity.this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, PERMISSION_ACCESS_COARSE_LOCATION);
+                } else {
+                    startClient();
+                }
             }
         });
 
@@ -80,11 +78,7 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
                 if (!selected.isEmpty()) {
                     callMainActivity(selected);
                 } else {
-                    new SweetAlertDialog(WelcomeActivity.this, SweetAlertDialog.WARNING_TYPE)
-                            .setTitleText("Alert!")
-                            .setContentText("Please write a valid location")
-                            .setConfirmText("Ok, i got it!")
-                            .show();
+                    showAlertDialog("Please write a valid location");
                 }
             }
         });
@@ -95,9 +89,9 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
         switch (requestCode) {
             case PERMISSION_ACCESS_COARSE_LOCATION:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // All good!
+                    startClient();
                 } else {
-                    Toast.makeText(this, "Need your location!", Toast.LENGTH_SHORT).show();
+                    showAlertDialog("We need your location");
                 }
 
                 break;
@@ -106,8 +100,25 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
 
     private void callMainActivity(String city) {
         Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
-        intent.putExtra(WELCOME_CITY, city);
+        intent.putExtra(MainActivity.MODE, MainActivity.MODE_CITY);
+        intent.putExtra(MainActivity.WELCOME_CITY, city);
         startActivity(intent);
+    }
+
+    private void callMainActivity(Double lat, Double lon) {
+        Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+        intent.putExtra(MainActivity.MODE, MainActivity.MODE_LOCATION);
+        intent.putExtra(MainActivity.WELCOME_LAT, lat);
+        intent.putExtra(MainActivity.WELCOME_LON, lon);
+        startActivity(intent);
+    }
+
+    private void showAlertDialog(String message) {
+        new SweetAlertDialog(WelcomeActivity.this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Alert!")
+                .setContentText(message)
+                .setConfirmText("Ok, i got it!")
+                .show();
     }
 
     @Override
@@ -116,21 +127,17 @@ public class WelcomeActivity extends AppCompatActivity implements GoogleApiClien
                 == PackageManager.PERMISSION_GRANTED) {
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
 
-            double lat = lastLocation.getLatitude(), lon = lastLocation.getLongitude();
-//            String units = "imperial";
-//            String url = String.format("http://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&units=%s&appid=%s",
-//                    lat, lon, units, APP_ID);
-//            new GetWeatherTask(textView).execute(url);
+            callMainActivity(lastLocation.getLatitude(), lastLocation.getLongitude());
         }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        Log.i("askdm", "kamskdma");
+        Log.i("GoogleAPIClient", "Connection Suspended");
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.i("askdm", "kamskdma");
+        Log.i("GoogleAPIClient", "Connection Failed");
     }
 }

@@ -1,5 +1,6 @@
 package com.example.mmadddoni.globather.Activity;
 
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,7 @@ import com.example.mmadddoni.globather.Service.OpenWeatherService;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
@@ -27,16 +29,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by mmadddoni on 11/07/16.
  */
 public class MainActivity extends AppCompatActivity {
-    private static final String WELCOME_CITY = "WELCOME_CITY";
-    private static final String SAVED_CITY = "SAVED_CITY";
+    public static final int MODE_CITY = 1;
+    public static final int MODE_LOCATION = 2;
+
+    public static final String MODE = "MODE";
+    public static final String WELCOME_CITY = "WELCOME_CITY";
+    public static final String WELCOME_LAT = "WELCOME_LAT";
+    public static final String WELCOME_LON = "WELCOME_LON";
 
     private static final int DAYS_REQUESTED = 15;
     private static final String APP_ID = "1a0fc8a04f53b87f9f057ffb763a435a";
     private static final String BASE_URL = "http://api.openweathermap.org/data/2.5/";
 
     private Toolbar mToolbar;
-    private SweetAlertDialog progressDialog;
 
+    private int mode;
+    private double lat;
+    private double lon;
     private String city;
     private RecyclerView recyclerView;
     private ForecastAdapter mAdapter;
@@ -59,12 +68,12 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         if (savedInstanceState == null) {
-            city = getIntent().getStringExtra(WELCOME_CITY);
+            mode = getIntent().getIntExtra(MODE, 1);
+            handleBundle(getIntent().getExtras());
         } else {
-            city = savedInstanceState.getString(SAVED_CITY);
+            mode = savedInstanceState.getInt(MODE);
+            handleBundle(savedInstanceState);
         }
-
-        loadForecastData();
     }
 
     @Override
@@ -75,11 +84,28 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putString(SAVED_CITY, city);
+        outState.putInt(MODE, mode);
+        outState.putString(WELCOME_CITY, city);
+        outState.putDouble(WELCOME_LAT, lat);
+        outState.putDouble(WELCOME_LON, lon);
         super.onSaveInstanceState(outState);
     }
 
-    private void loadForecastData() {
+    private void handleBundle(Bundle bundle) {
+        switch (mode) {
+            case MODE_CITY:
+                city = bundle.getString(WELCOME_CITY);
+                loadCityForecastData();
+                break;
+            case MODE_LOCATION:
+                lat = bundle.getDouble(WELCOME_LAT);
+                lon = bundle.getDouble(WELCOME_LON);
+                loadLocationForecastData();
+                break;
+        }
+    }
+
+    private void loadCityForecastData() {
         long count = realm.where(Response.class).count();
         if (count != 0) {
             String realmCity = city.substring(0, 1).toUpperCase() + city.substring(1).toLowerCase();
@@ -87,11 +113,35 @@ public class MainActivity extends AppCompatActivity {
             if (response != null) {
                 loadResponseFromRealm(response);
             } else {
-                loadResponseFromRetrofit();
+                loadResponseFromRetrofit(mode);
             }
         } else {
-            loadResponseFromRetrofit();
+            loadResponseFromRetrofit(mode);
         }
+    }
+
+    private void loadLocationForecastData() {
+        long count = realm.where(Response.class).count();
+        if (count != 0) {
+            RealmResults<Response> responses = realm.where(Response.class).findAll();
+            for (Response response : responses) {
+                Location realmLocation = new Location("");
+                realmLocation.setLatitude(response.getCity().getCoord().getLat());
+                realmLocation.setLongitude(response.getCity().getCoord().getLon());
+
+                Location gpsLocation = new Location("");
+                gpsLocation.setLatitude(lat);
+                gpsLocation.setLongitude(lon);
+
+                float distance = realmLocation.distanceTo(gpsLocation);
+                if (distance < 50000) {
+                    loadResponseFromRealm(response);
+                    return;
+                }
+            }
+
+        }
+        loadResponseFromRetrofit(mode);
     }
 
     private void loadResponseFromRealm(Response response) {
@@ -99,7 +149,7 @@ public class MainActivity extends AppCompatActivity {
         setUpRecyclerView(response);
     }
 
-    private void loadResponseFromRetrofit() {
+    private void loadResponseFromRetrofit(int mode) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -107,7 +157,19 @@ public class MainActivity extends AppCompatActivity {
 
         OpenWeatherService service = retrofit.create(OpenWeatherService.class);
 
-        Call<Response> responseCall = service.getForecasts(city, DAYS_REQUESTED, APP_ID);
+        Call<Response> responseCall;
+
+        switch (mode) {
+            case MODE_CITY:
+                responseCall = service.getCityForecasts(city, DAYS_REQUESTED, APP_ID);
+                break;
+            case MODE_LOCATION:
+                responseCall = service.getLocationForecasts(lat, lon, DAYS_REQUESTED, APP_ID);
+                break;
+            default:
+                responseCall = service.getCityForecasts(city, DAYS_REQUESTED, APP_ID);
+                break;
+        }
 
         responseCall.enqueue(new Callback<Response>() {
             @Override

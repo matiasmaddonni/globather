@@ -15,24 +15,24 @@ import io.realm.RealmObject;
         analyze = { Coordinates.class })
 public class Coordinates extends RealmObject {
     @SerializedName("lon")
-    private float lon;
+    private double lon;
 
     @SerializedName("lat")
-    private float lat;
+    private double lat;
 
-    public float getLon() {
+    public double getLon() {
         return lon;
     }
 
-    public float getLat() {
-        return lat;
-    }
-
-    public void setLon(float lon) {
+    public void setLon(double lon) {
         this.lon = lon;
     }
 
-    public void setLat(float lat) {
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
         this.lat = lat;
     }
 }
